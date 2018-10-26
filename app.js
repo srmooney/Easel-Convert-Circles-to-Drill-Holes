@@ -2,8 +2,6 @@
 // the accepted properties for your application
 var properties = [
   {type: 'boolean', id: 'Replace Existing', value: false}
-//  {type: 'range', id: "Height", value: 4, min: 1, max: 10, step: 1},
-//  {type: 'range', id: "Radius", value: 0, min: 0, max: 10, step: 1}
 ];
 
 var getSelectedVolumes = function(volumes, selectedVolumeIds){
@@ -17,18 +15,19 @@ var getSelectedVolumes = function(volumes, selectedVolumeIds){
 // callback if unable to do so
 var executor = function(args, success, failure) {
   var params = args.params;
-  var material = args.material;
-  var bitSize = args.bitParams.bit.width;
-  if (args.bitParams.bit.unit === 'mm') { bitSize /= 25.4; }
-  
+
   var removeExisting = params['Replace Existing'];
-  
   var newVolumes = [];
   var selectedVolumes = getSelectedVolumes(args.volumes, args.selectedVolumeIds);
+
+  /* filter out non ellipse */
+  selectedVolumes = selectedVolumes.filter(function(item){ return item.shape.type == 'ellipse'; });
+  
+  if (selectedVolumes.length === 0){
+    return failure('No Circles found in selection');
+  }
   
   selectedVolumes.forEach(function(selectedVolume){
-    console.log('selectedVolume', selectedVolume);
-    /* */
     newVolumes.push({
       shape: {
           type: 'drill',
@@ -37,8 +36,6 @@ var executor = function(args, success, failure) {
             y: selectedVolume.shape.center.y
           },
           flipping: {},
-          width: bitSize,
-          height: bitSize,
           rotation: 0
       },
       cut: {
@@ -50,7 +47,6 @@ var executor = function(args, success, failure) {
     });
     
     if (removeExisting){
-      delete selectedVolume.shape;
       newVolumes.push({
         id: selectedVolume.id
       });
@@ -58,6 +54,5 @@ var executor = function(args, success, failure) {
    
   });
 
-  //return failure('Not able to find points');
   return success(newVolumes);
 };
