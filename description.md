@@ -1,1 +1,1 @@
-Replace selected shapes with a drill point placed at the center of the shape
+Replace selected circles with a drill point placed at the center.
