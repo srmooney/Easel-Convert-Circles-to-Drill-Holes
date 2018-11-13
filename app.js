@@ -21,7 +21,7 @@ var executor = function(args, success, failure) {
   var selectedVolumes = getSelectedVolumes(args.volumes, args.selectedVolumeIds);
 
   /* filter out non ellipse */
-  selectedVolumes = selectedVolumes.filter(function(item){ return item.shape.type == 'ellipse'; });
+  selectedVolumes = selectedVolumes.filter(function(item){ return ['path','ellipse'].indexOf(item.shape.type) >= 0; });
   
   if (selectedVolumes.length === 0){
     return failure('No Circles found in selection');
