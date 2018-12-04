@@ -30,19 +30,22 @@ var executor = function(args, success, failure) {
   selectedVolumes.forEach(function(selectedVolume){
     newVolumes.push({
       shape: {
+          anchored: false,
           type: 'drill',
           center: {
             x: selectedVolume.shape.center.x,
             y: selectedVolume.shape.center.y
           },
           flipping: {},
-          rotation: 0
+          isProportionLocked: false
+          //rotation: 0
       },
       cut: {
          type: 'drill',
          depth: selectedVolume.cut.depth,
          outlineStyle: 'on-path',
-         tabPreference: false
+         tabPreference: false,
+         useProfile: false
       }
     });
     
